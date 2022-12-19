@@ -1,6 +1,6 @@
 
 import * as React from 'react';
-import { Button, Text, TextInput, ToastAndroid,View ,StyleSheet } from 'react-native';
+import { Button, Text, TextInput, ToastAndroid,View ,StyleSheet,SafeAreaView } from 'react-native';
 import { AuthCtx } from '../context/authCtx';
 import {get} from '../rest'
 
@@ -14,15 +14,15 @@ const SignInScreen =()=> {
     const login = async ()=>{
       setLoading(true)
       const {data,error } = await  get('/crisnil/fake-api/profile');
-        console.log(data,error)
         if(data){
           setLoading(false)
-          if(data.user == username  && data.password == password){
-            dispatch({type:"SIGN_IN",token:"secret-token"})
-          }
-          else{
-            ToastAndroid.show('Invalid Credentials', ToastAndroid.LONG);
-          }
+         // if(data.user == username  && data.password == password){
+            dispatch({type:"SIGN_IN",token:"secret-token"});
+            dispatch({type:"SET_PROFILE",profile:data})
+         // }
+         // else{
+         //   ToastAndroid.show('Invalid Credentials', ToastAndroid.LONG);
+        //  }
         }
         else{
           setLoading(false);
@@ -34,8 +34,15 @@ const SignInScreen =()=> {
       dispatch({type:"SIGN_IN",token:"secret-token"})
     }
 
-    console.log("state",isLoading)
+    
     return (
+      <SafeAreaView style={styles.container}>
+        {loading?
+           <View>
+           <Text>Loading...</Text>
+         </View>  
+         :
+      
       <View>
         <TextInput
           placeholder="Username"
@@ -50,6 +57,17 @@ const SignInScreen =()=> {
         />
         <Button title="Sign in" onPress={login} loading={loading}/>
       </View>
+      }
+      </SafeAreaView>
     );
   }
   export default SignInScreen;
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#fff',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  });

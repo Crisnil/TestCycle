@@ -1,10 +1,11 @@
 
 import * as React from 'react';
-import { Button, Text, TextInput ,StyleSheet, View } from 'react-native';
+import { Button, Text, TextInput ,StyleSheet} from 'react-native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './screens/HomeScreen';
-import SplashScreen from './screens/SplashScreen';
+import ProfileScreen from './screens/ProfileScreen';
 import SignInScreen from './screens/SignInScreen';
 import { AccountProvider } from './context/account';
 import authCtx,{AuthCtx} from'./context/authCtx';
@@ -19,6 +20,10 @@ export default function App({ navigation }) {
    const [state, dispatch] = React.useReducer(authCtx, {});
 
 
+
+   const onSignOut =()=>{
+     dispatch({type:"SIGN_OUT"})
+   }
   React.useEffect(() => {
    
     
@@ -28,32 +33,36 @@ export default function App({ navigation }) {
       try {
         // Restore token stored in `SecureStore` or any other encrypted storage
          userToken = await SecureStore.getItemAsync('userToken');
+         await dispatch({ type: 'RESTORE_TOKEN', token: userToken });
       } catch (e) {
         // Restoring token failed
       }
 
-      dispatch({ type: 'RESTORE_TOKEN', token: userToken });
+      
     };
 
     bootstrapAsync();
   }, []);
 
+  const Drawer = createDrawerNavigator();
   
-
-  console.log("root",state)
+console.log(state);
 
   return (
     <AuthCtx.Provider
       value={{...state,dispatch}}
     >
     <AccountProvider>
+   
       <NavigationContainer>
-        <Stack.Navigator>
-          {state.isLoading ? (
+        
+          {/* {state.isLoading ? (
             // We haven't finished checking for the token yet
             <Stack.Screen name="Splash" component={SplashScreen} />
-          ) : state.userToken == null ? (
-            // No token found, user isn't signed in
+          ) :  */}
+          {state.userToken == null ? (
+            <Stack.Navigator>
+           
             <Stack.Screen
               name="SignIn"
               component={SignInScreen}
@@ -63,12 +72,33 @@ export default function App({ navigation }) {
                 animationTypeForReplace: state.isSignout ? 'pop' : 'push',
               }}
             />
+            </Stack.Navigator>
           ) : (
             // User is signed in
-            <Stack.Screen name="Home" component={HomeScreen} />
+            // <Stack.Screen name="Home" component={HomeScreen} 
+            // options={({ navigation, route }) => ({
+            //   headerTitle: (props) => <Text>Welcome</Text>,
+            //   // Add a placeholder button without the `onPress` to avoid flicker
+            //   headerRight: () => (
+            //     <Button title="Sign Out"onPress={onSignOut} />
+            //   ),
+            // })}
+            // />
+            <Drawer.Navigator initialRouteName="Home">
+            <Drawer.Screen name="Home" component={HomeScreen}  />
+            <Drawer.Screen name="ProfileScreen" component={ProfileScreen} 
+            options={({ navigation, route }) => ({
+              // Add a placeholder button without the `onPress` to avoid flicker
+              headerRight: () => (
+                <Button title="Sign Out"onPress={onSignOut} />
+              ),
+            })}
+            />
+          </Drawer.Navigator>
           )}
-        </Stack.Navigator>
+        
       </NavigationContainer>
+      
     </AccountProvider>
     </AuthCtx.Provider>
   );

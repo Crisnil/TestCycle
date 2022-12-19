@@ -6,6 +6,7 @@ const InitialState ={
     isLoading: true,
     isSignout: false,
     userToken: null,
+    profile:null,
 }
 
 export const AuthCtx = React.createContext({InitialState});
@@ -30,6 +31,12 @@ export default function auth(state, action) {
             ...state,
             isSignout: true,
             userToken: null,
+          };
+          case 'SET_PROFILE':
+          return {
+            ...state,
+            profile: action.profile,
+           
           };
           default:{
             return {
