@@ -16,13 +16,13 @@ const SignInScreen =()=> {
       const {data,error } = await  get('/crisnil/fake-api/profile');
         if(data){
           setLoading(false)
-         // if(data.user == username  && data.password == password){
+          if(data.user == username  && data.password == password){
             dispatch({type:"SIGN_IN",token:"secret-token"});
             dispatch({type:"SET_PROFILE",profile:data})
-         // }
-         // else{
-         //   ToastAndroid.show('Invalid Credentials', ToastAndroid.LONG);
-        //  }
+          }
+          else{
+            ToastAndroid.show('Invalid Credentials', ToastAndroid.LONG);
+          }
         }
         else{
           setLoading(false);

@@ -7,6 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './screens/HomeScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import SignInScreen from './screens/SignInScreen';
+import MapScreen from './screens/MapScreen';
 import { AccountProvider } from './context/account';
 import authCtx,{AuthCtx} from'./context/authCtx';
 import * as SecureStore from 'expo-secure-store';
@@ -47,19 +48,18 @@ export default function App({ navigation }) {
   const Drawer = createDrawerNavigator();
   
 console.log(state);
-
+ 
+   if(state.isLoading){
+    return(
+      <Stack.Screen name="Splash" component={SplashScreen} />
+    )
+   }
   return (
     <AuthCtx.Provider
       value={{...state,dispatch}}
     >
     <AccountProvider>
-   
       <NavigationContainer>
-        
-          {/* {state.isLoading ? (
-            // We haven't finished checking for the token yet
-            <Stack.Screen name="Splash" component={SplashScreen} />
-          ) :  */}
           {state.userToken == null ? (
             <Stack.Navigator>
            
@@ -75,22 +75,15 @@ console.log(state);
             </Stack.Navigator>
           ) : (
             // User is signed in
-            // <Stack.Screen name="Home" component={HomeScreen} 
-            // options={({ navigation, route }) => ({
-            //   headerTitle: (props) => <Text>Welcome</Text>,
-            //   // Add a placeholder button without the `onPress` to avoid flicker
-            //   headerRight: () => (
-            //     <Button title="Sign Out"onPress={onSignOut} />
-            //   ),
-            // })}
-            // />
+            
             <Drawer.Navigator initialRouteName="Home">
             <Drawer.Screen name="Home" component={HomeScreen}  />
+            <Drawer.Screen name="Map" component={MapScreen}  />
             <Drawer.Screen name="ProfileScreen" component={ProfileScreen} 
             options={({ navigation, route }) => ({
               // Add a placeholder button without the `onPress` to avoid flicker
               headerRight: () => (
-                <Button title="Sign Out"onPress={onSignOut} />
+                <Button title="Sign Out" onPress={onSignOut} />
               ),
             })}
             />
