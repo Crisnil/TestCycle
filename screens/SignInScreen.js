@@ -26,7 +26,7 @@ const SignInScreen =()=> {
         }
         else{
           setLoading(false);
-          ToastAndroid.show('Something went wrong!', ToastAndroid.Long);
+          ToastAndroid.show('Something went wrong!', ToastAndroid.LONG);
         }
        
     }
@@ -45,11 +45,13 @@ const SignInScreen =()=> {
       
       <View>
         <TextInput
+        style={styles.inputs}
           placeholder="Username"
           value={username}
           onChangeText={setUsername}
         />
         <TextInput
+        style={styles.inputs}
           placeholder="Password"
           value={password}
           onChangeText={setPassword}
@@ -70,4 +72,12 @@ const SignInScreen =()=> {
       alignItems: 'center',
       justifyContent: 'center',
     },
+    inputs:{
+      backgroundColor:"#fff",
+      height: 40,
+      width:200,
+      margin: 12,
+      borderWidth: 1,
+      padding: 10,
+    }
   });

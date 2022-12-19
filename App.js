@@ -46,8 +46,7 @@ export default function App({ navigation }) {
   }, []);
 
   const Drawer = createDrawerNavigator();
-  
-console.log(state);
+ 
  
    if(state.isLoading){
     return(
@@ -80,7 +79,7 @@ console.log(state);
             <Drawer.Screen name="Home" component={HomeScreen}  />
             <Drawer.Screen name="Map" component={MapScreen}  />
             <Drawer.Screen name="ProfileScreen" component={ProfileScreen} 
-            options={({ navigation, route }) => ({
+            options={() => ({
               // Add a placeholder button without the `onPress` to avoid flicker
               headerRight: () => (
                 <Button title="Sign Out" onPress={onSignOut} />

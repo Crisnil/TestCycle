@@ -6,9 +6,8 @@ import { AuthCtx } from '../context/authCtx';
 
  const  ProfileScreen = ()=> {
 
-  const {dispatch,profile}= React.useContext(AuthCtx);
+const {dispatch,profile}= React.useContext(AuthCtx);
 
-console.log(profile.avatar)
     return (
       <View>
         <Text>Name : {profile.user}</Text>
